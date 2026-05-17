@@ -75,6 +75,20 @@ function App() {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[3px] bg-white/30 rounded-2xl overflow-hidden shadow-lg">
+            {[
+              { label: 'BA',  value: stats.avg },
+              { label: 'RBI', value: stats.rbi },
+              { label: 'OBP', value: stats.obp },
+              { label: 'OPS', value: stats.ops },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center bg-[#1e293b] py-4 px-2">
+                <span className="text-2xl sm:text-4xl font-black leading-none">{value ?? '—'}</span>
+                <span className="text-xs sm:text-sm font-semibold mt-1 tracking-widest uppercase text-white/60">{label}</span>
+              </div>
+            ))}
+          </div>
+
           <div className="flex flex-col bg-white/10 border border-white/20 rounded-2xl px-6 py-6 sm:px-12 sm:py-8 shadow-lg">
             <span className="text-base sm:text-xl font-semibold tracking-widest uppercase mb-4">Road to 500</span>
             <div className="flex items-end gap-3 mb-5">
