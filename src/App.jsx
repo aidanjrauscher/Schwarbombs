@@ -30,7 +30,7 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#001f5b] text-white px-4 py-10">
-      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Kyle Schwarber HR Tracker</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Schwarbomb Tracker</h1>
       <p className="text-[#e81828] text-base sm:text-lg font-semibold mb-8 tracking-widest uppercase">Philadelphia Phillies · {season}</p>
 
       {error && <p className="text-red-400">{error}</p>}
@@ -75,7 +75,7 @@ function App() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[3px] bg-white/30 rounded-2xl overflow-hidden shadow-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-0.75 bg-white/30 rounded-2xl overflow-hidden shadow-lg">
             {[
               { label: 'BA',  value: stats.avg },
               { label: 'RBI', value: stats.rbi },
