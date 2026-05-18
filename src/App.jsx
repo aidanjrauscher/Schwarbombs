@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { getSeason, fetchAllStats } from './api'
+import HomeRunList from './HomeRunList'
 
 function App() {
+  const [showHRList, setShowHRList] = useState(false)
   const [stats, setStats] = useState(null)
   const [teamGamesPlayed, setTeamGamesPlayed] = useState(null)
   const [careerHR, setCareerHR] = useState(null)
@@ -9,9 +11,13 @@ function App() {
   const [noGameToday, setNoGameToday] = useState(false)
   const [error, setError] = useState(null)
 
-  const season = getSeason()
+  const currentSeason = getSeason()
+  const [season, setSeason] = useState(currentSeason)
+  const MIN_SEASON = 2022
 
   useEffect(() => {
+    setStats(null)
+    setError(null)
     fetchAllStats(season)
       .then(data => {
         if (data.stats) setStats(data.stats)
@@ -22,16 +28,30 @@ function App() {
         setNoGameToday(data.noGameToday)
       })
       .catch(() => setError('Failed to fetch stats'))
-  }, [])
+  }, [season])
 
   const projectedHR = stats && teamGamesPlayed
     ? Math.floor(stats.homeRuns * (162 / teamGamesPlayed))
     : null
 
+  if (showHRList) return <HomeRunList season={season} onBack={() => setShowHRList(false)} />
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#001f5b] text-white px-4 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Schwarbomb Tracker</h1>
-      <p className="text-[#e81828] text-base sm:text-lg font-semibold mb-8 tracking-widest uppercase">Philadelphia Phillies · {season}</p>
+      <div className="flex items-center gap-2 mb-8">
+        <button
+          onClick={() => setSeason(s => s - 1)}
+          disabled={season <= MIN_SEASON}
+          className="text-[#e81828] font-bold text-lg leading-none disabled:opacity-20 hover:opacity-70 transition-opacity"
+        >‹</button>
+        <p className="text-[#e81828] text-base sm:text-lg font-semibold tracking-widest uppercase">Philadelphia Phillies · {season}</p>
+        <button
+          onClick={() => setSeason(s => s + 1)}
+          disabled={season >= currentSeason}
+          className="text-[#e81828] font-bold text-lg leading-none disabled:opacity-20 hover:opacity-70 transition-opacity"
+        >›</button>
+      </div>
 
       {error && <p className="text-red-400">{error}</p>}
 
@@ -61,7 +81,7 @@ function App() {
                 <>
                   <span className="text-5xl sm:text-7xl font-black leading-none mb-4">—</span>
                   <span className="text-base sm:text-xl font-semibold mt-2 tracking-widest uppercase">Today's HR</span>
-                  <p className="text-white/60 text-sm mt-2">No game today</p>
+                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? season : 'No game today'}</p>
                 </>
               ) : (
                 <>
@@ -69,7 +89,7 @@ function App() {
                     {todayHR ?? <span className="animate-pulse text-white/40">·</span>}
                   </span>
                   <span className="text-base sm:text-xl font-semibold mt-2 tracking-widest uppercase">Today's HR</span>
-                  <p className="text-white/60 text-sm mt-2">&nbsp;</p>
+                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? season : <>&nbsp;</>}</p>
                 </>
               )}
             </div>
@@ -103,6 +123,13 @@ function App() {
             </div>
             <p className="text-white/40 text-sm mt-2 text-right">{careerHR ? 500 - careerHR : '—'} to go</p>
           </div>
+
+          <button
+            onClick={() => setShowHRList(true)}
+            className="text-white/50 hover:text-white text-sm font-semibold tracking-widest uppercase transition-colors text-center py-2"
+          >
+            Show individual home runs →
+          </button>
         </div>
       )}
     </main>
