@@ -104,10 +104,18 @@ function HRCard({ hr, number }) {
           <p className="text-white/70 text-xs uppercase tracking-widest">
             {hr.halfInning === 'top' ? '▲' : '▼'} {hr.inning}
           </p>
+          {hr.scoreHome != null && hr.scoreAway != null && (() => {
+            const phillies = hr.isHome ? hr.scoreHome - hr.rbi : hr.scoreAway - hr.rbi
+            const opp = hr.isHome ? hr.scoreAway : hr.scoreHome
+            return <p className="text-white/50 text-xs">PHI {phillies} · OPP {opp}</p>
+          })()}
           {hr.rbi > 1 && (
             <p className="text-[#e81828] text-xs font-bold">
               {hr.rbi === 4 ? 'Grand Slam' : `${hr.rbi}-run HR`}
             </p>
+          )}
+          {hr.isWalkoff && (
+            <p className="text-yellow-400 text-xs font-bold">Walk-off</p>
           )}
         </div>
       </div>

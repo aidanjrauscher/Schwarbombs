@@ -86,6 +86,8 @@ export async function fetchSeasonHomeRuns(season) {
       p => p.result?.eventType === 'home_run' && p.matchup?.batter?.id === PLAYER_ID
     )
 
+    const lastPlayIndex = allPlays[allPlays.length - 1]?.atBatIndex
+
     for (const play of hrPlays) {
       const pitchEvents = (play.playEvents ?? []).filter(e => e.isPitch)
       const lastPitch = pitchEvents[pitchEvents.length - 1]
@@ -112,6 +114,9 @@ export async function fetchSeasonHomeRuns(season) {
         balls: lastPitch?.count?.balls,
         strikes: lastPitch?.count?.strikes,
         rbi: play.result?.rbi,
+        scoreHome: play.result?.homeScore ?? null,
+        scoreAway: play.result?.awayScore ?? null,
+        isWalkoff: play.atBatIndex === lastPlayIndex && play.about?.halfInning === 'bottom',
       })
     }
   }
