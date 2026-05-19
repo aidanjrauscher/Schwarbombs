@@ -120,5 +120,5 @@ export async function fetchSeasonHomeRuns(season) {
     }
   }
 
-  return homeRuns.sort((a, b) => new Date(b.date) - new Date(a.date))
+  return homeRuns.sort((a, b) => new Date(b.date) - new Date(a.date) || b.inning - a.inning)
 }
