@@ -18,12 +18,11 @@ function getToday(year) {
 
 export async function fetchAllStats(season) {
   const today = getToday(season)
-
   const [playerData, teamData, careerData, scheduleData] = await Promise.all([
     fetch(`https://statsapi.mlb.com/api/v1/people/${PLAYER_ID}/stats?stats=season&group=hitting&season=${season}`).then(r => r.json()),
     fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/stats?stats=season&group=hitting&season=${season}`).then(r => r.json()),
     fetch(`https://statsapi.mlb.com/api/v1/people/${PLAYER_ID}/stats?stats=career&group=hitting`).then(r => r.json()),
-    fetch(`https://statsapi.mlb.com/api/v1/schedule?teamId=${TEAM_ID}&date=${today}&sportId=1&gameType=R`).then(r => r.json()),
+    fetch(`https://statsapi.mlb.com/api/v1/schedule?teamId=${TEAM_ID}&date=${today}&sportId=1&gameType=R,F,D,L,W`).then(r => r.json()),
   ])
 
   const stats = playerData?.stats?.[0]?.splits?.[0]?.stat ?? null
@@ -39,7 +38,7 @@ export async function fetchAllStats(season) {
 
   const gamePks = games.map(g => g.gamePk)
   const gameLogData = await fetch(
-    `https://statsapi.mlb.com/api/v1/people/${PLAYER_ID}/stats?stats=gameLog&group=hitting&season=${season}`
+    `https://statsapi.mlb.com/api/v1/people/${PLAYER_ID}/stats?stats=gameLog&group=hitting&season=${season}&gameType=R,F,D,L,W`
   ).then(r => r.json())
   const splits = gameLogData?.stats?.[0]?.splits ?? []
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getSeason, fetchAllStats } from './api'
-import HomeRunList from './HomeRunList'
+import HomeRunList from './components/HomeRunList'
 
 function App() {
   const [showHRList, setShowHRList] = useState(false)
@@ -33,6 +33,11 @@ function App() {
   const projectedHR = stats && teamGamesPlayed
     ? Math.floor(stats.homeRuns * (162 / teamGamesPlayed))
     : null
+
+  const seasonLabel = season === currentSeason
+    ? String(season)
+    : new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        .replace(String(new Date().getFullYear()), String(season))
 
   if (showHRList) return <HomeRunList season={season} onBack={() => setShowHRList(false)} />
 
@@ -81,7 +86,7 @@ function App() {
                 <>
                   <span className="text-5xl sm:text-7xl font-black leading-none mb-4">—</span>
                   <span className="text-base sm:text-xl font-semibold mt-2 tracking-widest uppercase">Today's HR</span>
-                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? season : 'No game today'}</p>
+                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? seasonLabel : 'No game today'}</p>
                 </>
               ) : (
                 <>
@@ -89,7 +94,7 @@ function App() {
                     {todayHR ?? <span className="animate-pulse text-white/40">·</span>}
                   </span>
                   <span className="text-base sm:text-xl font-semibold mt-2 tracking-widest uppercase">Today's HR</span>
-                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? season : <>&nbsp;</>}</p>
+                  <p className="text-white/60 text-sm mt-2">{season !== currentSeason ? seasonLabel : <>&nbsp;</>}</p>
                 </>
               )}
             </div>
