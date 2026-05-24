@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getSeason, fetchAllStats } from './api'
 import HomeRunList from './components/HomeRunList'
+import { Analytics } from '@vercel/analytics/react'
 
 function App() {
   const [showHRList, setShowHRList] = useState(false)
@@ -43,6 +44,7 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#001f5b] text-white px-4 py-10">
+      <Analytics />
       <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">Schwarbomb Tracker</h1>
       <div className="flex items-center gap-2 mb-8">
         <button
