@@ -3,7 +3,7 @@ function HomeRunSprayChart({ coordX, coordY }) {
     <div className="flex flex-col items-center justify-center bg-white/5 rounded-xl px-3 py-2">
       <svg viewBox="-10 20 270 195" className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
         {/* Outfield */}
-        <path d="M 125 205 L 5 85 A 140 140 0 0 1 245 85 Z" fill="#166534" stroke="#fff" strokeWidth="1.5" strokeOpacity="0.2" />
+        <path d="M 125 205 L 5 85 A 140npm 140 0 0 1 245 85 Z" fill="#166534" stroke="#fff" strokeWidth="1.5" strokeOpacity="0.2" />
         {/* Infield — proper square diamond: home(125,205), 1B(182,148), 2B(125,92), 3B(68,148) */}
         <path d="M 125 205 L 182 148 L 125 92 L 68 148 Z" fill="#92400e" stroke="#fff" strokeWidth="1.5" strokeOpacity="0.2" />
         {/* Bases */}

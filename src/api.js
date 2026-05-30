@@ -16,6 +16,15 @@ function getToday(year) {
   return `${yyyy}-${mm}-${dd}`
 }
 
+function getYesterday() {
+  const d = new Date()
+  d.setDate(d.getDate() - 1)
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
 export async function fetchAllStats(season) {
   const today = getToday(season)
   const [playerData, teamData, careerData, scheduleData] = await Promise.all([
@@ -32,7 +41,18 @@ export async function fetchAllStats(season) {
   const totalGames = scheduleData?.totalGames ?? 0
   const games = scheduleData?.dates?.[0]?.games ?? []
 
-  if (totalGames === 0) {
+  // Always check yesterday for a game that started late and is still active past midnight
+  const yesterday = getYesterday()
+  const ySchedule = await fetch(
+    `https://statsapi.mlb.com/api/v1/schedule?teamId=${TEAM_ID}&date=${yesterday}&sportId=1&gameType=R,F,D,L,W`
+  ).then(r => r.json())
+  const yGames = ySchedule?.dates?.[0]?.games ?? []
+  const activeYesterdayGame = yGames.find(g => g.status?.abstractGameCode === 'L')
+  if (activeYesterdayGame) {
+    games.push(activeYesterdayGame)
+  }
+
+  if (games.length === 0) {
     return { stats, teamGamesPlayed, careerHR, todayHR: null, noGameToday: true }
   }
 
