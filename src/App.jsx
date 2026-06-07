@@ -10,6 +10,7 @@ function App() {
   const [careerHR, setCareerHR] = useState(null)
   const [todayHR, setTodayHR] = useState(null)
   const [noGameToday, setNoGameToday] = useState(false)
+  const [hrRank, setHrRank] = useState(null)
   const [error, setError] = useState(null)
 
   const currentSeason = getSeason()
@@ -27,9 +28,16 @@ function App() {
         setCareerHR(data.careerHR)
         setTodayHR(data.todayHR)
         setNoGameToday(data.noGameToday)
+        setHrRank(data.hrRank)
       })
       .catch(() => setError('Failed to fetch stats'))
   }, [season])
+
+  const ordinal = n => {
+    const s = ['th', 'st', 'nd', 'rd']
+    const v = n % 100
+    return n + (s[(v - 20) % 10] ?? s[v] ?? s[0])
+  }
 
   const projectedHR = stats && teamGamesPlayed
     ? Math.floor(stats.homeRuns * (162 / teamGamesPlayed))
@@ -73,6 +81,7 @@ function App() {
               <span className="text-7xl sm:text-9xl font-black leading-none">{stats.homeRuns}</span>
               <span className="text-base sm:text-xl font-semibold mt-2 tracking-widest uppercase">Home Runs</span>
               <p className="text-white/60 text-sm mt-2">{stats.gamesPlayed} games played</p>
+              {hrRank && <p className="text-white/60 text-sm mt-1">{ordinal(hrRank)} in MLB</p>}
             </div>
 
             <div className="flex flex-col items-center bg-[#7c3aed] rounded-2xl px-8 py-6 shadow-lg">
